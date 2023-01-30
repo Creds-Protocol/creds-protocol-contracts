@@ -1,0 +1,28 @@
+{
+    "name": "@creds-protocol/contracts",
+    "description": "Zero-Knowledge Identity Layer for Web3",
+    "version": "0.1.0",
+    "files": [
+      "**/*.sol",
+      "/build/contracts/*.json",
+      "!/mocks/**/*"
+    ],
+    "scripts": {
+      "prepare": "bash ./scripts/prepare-contracts-package.sh"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/Creds-Protocol/creds-protocol-contracts.git"
+    },
+    "keywords": [
+      "solidity",
+      "smart",
+      "contracts"
+    ],
+    "author": "Creds Protocol <creds.protocol@gmail.com>",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/Creds-Protocol/creds-protocol-contracts/issues"
+    },
+    "homepage": "https://github.com/Creds-Protocol/creds-protocol-contracts#readme/"
+  }
