@@ -9,19 +9,20 @@ import "./base/CredentialCreds.sol";
 /// @title Credential
 contract Credential is ICredential, CredentialCore, CredentialCreds {
     
+    address public credsIssuer;
+    string public issuerName;
+    string public issuerSymbol;
+    uint256 public credsIssuedCount;
+
     /// @dev Gets a tree depth and returns its verifier address.
     mapping(uint256 => IVerifier) public verifiers;
 
     /// @dev Gets a cred id and returns the cred parameters.
     mapping(uint256 => Cred) public creds;
-
-    mapping(address => Issuer) public issuers;
-
-    mapping(address => bool) public isCredsIssuer;
     
     /// @dev Checks if the cred issuer is the transaction sender.
     modifier onlyCredsIssuer() {
-        if (isCredsIssuer[_msgSender()]) {
+        if (credsIssuer == _msgSender()) {
             revert Credential__CallerIsNotTheCredIssuer();
         }
         _;
@@ -38,7 +39,12 @@ contract Credential is ICredential, CredentialCore, CredentialCreds {
 
     /// @dev Initializes the Credential verifiers used to verify the user's ZK proofs.
     /// @param _verifiers: List of Credential verifiers (address and related Merkle tree depth).
-    constructor(Verifier[] memory _verifiers) {
+    constructor(
+        Verifier[] memory _verifiers,
+        address _issuer,
+        string memory _issuerName,
+        string memory _issuerSymbol) 
+    {
         for (uint8 i = 0; i < _verifiers.length; ) {
             verifiers[_verifiers[i].merkleTreeDepth] = IVerifier(_verifiers[i].contractAddress);
 
@@ -46,16 +52,9 @@ contract Credential is ICredential, CredentialCore, CredentialCreds {
                 ++i;
             }
         }
-    }
-
-    function registerIssuer(
-        address _issuer,
-        string memory _issuerName,
-        string memory _issuerSymbol
-    ) internal {
-        issuers[_issuer].credsIssuer = _issuer;
-        issuers[_issuer].issuerName =_issuerName;
-        issuers[_issuer].issuerSymbol =_issuerSymbol;
+        credsIssuer = _issuer;
+        issuerName =_issuerName;
+        issuerSymbol =_issuerSymbol;
         emit issuerRegistered(_issuer, _issuerName, _issuerSymbol);
     }
 
