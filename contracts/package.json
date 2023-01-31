@@ -1,7 +1,7 @@
 {
     "name": "@creds-protocol/contracts",
     "description": "Zero-Knowledge Identity Layer for Web3",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "files": [
       "**/*.sol",
       "/build/contracts/*.json",

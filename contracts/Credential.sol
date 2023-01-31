@@ -70,6 +70,7 @@ contract Credential is ICredential, CredentialCore, CredentialCreds {
         creds[credId].admin = admin;
         creds[credId].credURI = credURI;
         creds[credId].merkleRootDuration = 1 hours;
+        credsIssuedCount = credsIssuedCount + 1;
     }
 
     function createCred(
@@ -85,6 +86,7 @@ contract Credential is ICredential, CredentialCore, CredentialCreds {
         creds[credId].admin = admin;
         creds[credId].credURI = credURI;
         creds[credId].merkleRootDuration = merkleTreeRootDuration;
+        credsIssuedCount = credsIssuedCount + 1;
     }
 
     function addIdentity(uint256 credId, uint256 identityCommitment) internal {
