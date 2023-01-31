@@ -6,8 +6,8 @@ import "./interfaces/IVerifier.sol";
 import "./base/CredentialCore.sol";
 import "./base/CredentialCreds.sol";
 
-/// @title Credential
-contract Credential is ICredential, CredentialCore, CredentialCreds {
+/// @title CredsIssuer
+contract CredsIssuer is ICredential, CredentialCore, CredentialCreds {
     
     address public credsIssuer;
     string public issuerName;
