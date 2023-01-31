@@ -20,6 +20,7 @@ abstract contract CredentialCreds is Context, ICredentialCreds {
     /// @param merkleTreeDepth: Depth of the tree.
     /// @param zeroValue: Zero value of the tree.
     function _createCred(
+        address issuer,
         uint256 credID,
         uint256 merkleTreeDepth,
         uint256 zeroValue
@@ -34,7 +35,7 @@ abstract contract CredentialCreds is Context, ICredentialCreds {
 
         merkleTree[credID].init(merkleTreeDepth, zeroValue);
 
-        emit CredCreated(credID, merkleTreeDepth, zeroValue);
+        emit CredCreated(issuer, credID, merkleTreeDepth, zeroValue);
     }
 
     /// @dev Adds an identity commitment to an existing cred.

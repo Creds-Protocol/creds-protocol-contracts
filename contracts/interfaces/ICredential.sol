@@ -4,16 +4,11 @@ pragma solidity 0.8.4;
 /// @title Credential interface.
 /// @dev Interface of a Credential contract.
 interface ICredential {
-    error Credential__CallerIsNotTheCredAdmin();
+    error Credential__CallerIsNotTheCredIssuer();
     error Credential__MerkleTreeDepthIsNotSupported();
     error Credential__MerkleTreeRootIsExpired();
     error Credential__MerkleTreeRootIsNotPartOfTheCred();
     error Credential__YouAreUsingTheSameNillifierTwice();
-
-    struct Verifier {
-        address contractAddress;
-        uint256 merkleTreeDepth;
-    }
 
     /// It defines all the cred parameters, in addition to those in the Merkle tree.
     struct Cred {
@@ -24,11 +19,28 @@ interface ICredential {
         mapping(uint256 => bool) nullifierHashes;
     }
 
+    struct Verifier {
+        address contractAddress;
+        uint256 merkleTreeDepth;
+    }
+    
+    struct Issuer {
+        address credsIssuer;
+        string issuerName;
+        string issuerSymbol;
+        uint256 credsIssuedCount;
+        mapping(uint256 => Cred) credsIssued;
+    }
+
     /// @dev Emitted when an admin is assigned to a cred.
-    /// @param credId: Id of the cred.
-    /// @param oldAdmin: Old admin of the cred.
-    /// @param newAdmin: New admin of the cred.
-    event credAdminUpdated(uint256 indexed credId, address indexed oldAdmin, address indexed newAdmin);
+    /// @param issuerAddress: Address of the issuer
+    /// @param issuerName: Name of the issuer
+    /// @param issuerSymbol: Symbol of the issuer
+    event issuerRegistered(
+        address indexed issuerAddress, 
+        string indexed issuerName, 
+        string indexed issuerSymbol
+    );
 
     /// @dev Emitted when a Credential proof is verified.
     /// @param credId: Id of the cred.

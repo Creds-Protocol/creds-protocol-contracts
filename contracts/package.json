@@ -1,15 +1,12 @@
 {
     "name": "@creds-protocol/contracts",
     "description": "Zero-Knowledge Identity Layer for Web3",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "files": [
       "**/*.sol",
       "/build/contracts/*.json",
       "!/mocks/**/*"
     ],
-    "scripts": {
-      "prepare": "bash ./scripts/prepare-contracts-package.sh"
-    },
     "repository": {
       "type": "git",
       "url": "git+https://github.com/Creds-Protocol/creds-protocol-contracts.git"

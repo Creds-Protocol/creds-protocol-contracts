@@ -10,10 +10,11 @@ interface ICredentialCreds {
     error Credential__CredIdIsNotLessThanSnarkScalarField();
 
     /// @dev Emitted when a new cred is created.
+    /// @param issuer: Cred Issuer
     /// @param credId: Id of the cred.
     /// @param merkleTreeDepth: Depth of the tree.
     /// @param zeroValue: Zero value of the tree.
-    event CredCreated(uint256 indexed credId, uint256 merkleTreeDepth, uint256 zeroValue);
+    event CredCreated(address indexed issuer, uint256 indexed credId, uint256 merkleTreeDepth, uint256 zeroValue);
 
     /// @dev Emitted when a new identity commitment is added.
     /// @param credId: Cred id of the cred.

@@ -15,11 +15,14 @@ contract Credential is ICredential, CredentialCore, CredentialCreds {
     /// @dev Gets a cred id and returns the cred parameters.
     mapping(uint256 => Cred) public creds;
 
-    /// @dev Checks if the cred admin is the transaction sender.
-    /// @param credId: Id of the cred.
-    modifier onlyCredAdmin(uint256 credId) {
-        if (creds[credId].admin != _msgSender()) {
-            revert Credential__CallerIsNotTheCredAdmin();
+    mapping(address => Issuer) public issuers;
+
+    mapping(address => bool) public isCredsIssuer;
+    
+    /// @dev Checks if the cred issuer is the transaction sender.
+    modifier onlyCredsIssuer() {
+        if (isCredsIssuer[_msgSender()]) {
+            revert Credential__CallerIsNotTheCredIssuer();
         }
         _;
     }
@@ -45,24 +48,31 @@ contract Credential is ICredential, CredentialCore, CredentialCreds {
         }
     }
 
-    /// @dev See {ICredential-createCred}.
+    function registerIssuer(
+        address _issuer,
+        string memory _issuerName,
+        string memory _issuerSymbol
+    ) internal {
+        issuers[_issuer].credsIssuer = _issuer;
+        issuers[_issuer].issuerName =_issuerName;
+        issuers[_issuer].issuerSymbol =_issuerSymbol;
+        emit issuerRegistered(_issuer, _issuerName, _issuerSymbol);
+    }
+
     function createCred(
         uint256 credId,
         uint256 merkleTreeDepth,
         uint256 zeroValue,
         address admin,
         string memory credURI
-    ) internal onlySupportedMerkleTreeDepth(merkleTreeDepth) {
-        _createCred(credId, merkleTreeDepth, zeroValue);
+    ) internal onlyCredsIssuer() onlySupportedMerkleTreeDepth(merkleTreeDepth) {
+        _createCred(msg.sender, credId, merkleTreeDepth, zeroValue);
 
         creds[credId].admin = admin;
         creds[credId].credURI = credURI;
         creds[credId].merkleRootDuration = 1 hours;
-
-        emit credAdminUpdated(credId, address(0), admin);
     }
 
-    /// @dev See {ICredential-createCred}.
     function createCred(
         uint256 credId,
         uint256 merkleTreeDepth,
@@ -70,25 +80,15 @@ contract Credential is ICredential, CredentialCore, CredentialCreds {
         address admin,
         uint256 merkleTreeRootDuration,
         string memory credURI
-    ) internal onlySupportedMerkleTreeDepth(merkleTreeDepth) {
-        _createCred(credId, merkleTreeDepth, zeroValue);
+    ) internal onlyCredsIssuer() onlySupportedMerkleTreeDepth(merkleTreeDepth) {
+        _createCred(msg.sender, credId, merkleTreeDepth, zeroValue);
 
         creds[credId].admin = admin;
         creds[credId].credURI = credURI;
         creds[credId].merkleRootDuration = merkleTreeRootDuration;
-
-        emit credAdminUpdated(credId, address(0), admin);
     }
 
-    /// @dev See {ICredential-updateCredAdmin}.
-    function updateCredAdmin(uint256 credId, address newAdmin) internal onlyCredAdmin(credId) {
-        creds[credId].admin = newAdmin;
-
-        emit credAdminUpdated(credId, _msgSender(), newAdmin);
-    }
-
-    /// @dev See {ICredential-addIdentity}.
-    function addIdentity(uint256 credId, uint256 identityCommitment) internal virtual onlyCredAdmin(credId) {
+    function addIdentity(uint256 credId, uint256 identityCommitment) internal {
         _addIdentity(credId, identityCommitment);
 
         uint256 merkleTreeRoot = getMerkleTreeRoot(credId);
@@ -96,10 +96,8 @@ contract Credential is ICredential, CredentialCore, CredentialCreds {
         creds[credId].merkleRootCreationDates[merkleTreeRoot] = block.timestamp;
     }
 
-    /// @dev See {ICredential-addIdentities}.
     function addIdentities(uint256 credId, uint256[] calldata identityCommitments)
         internal
-        onlyCredAdmin(credId)
     {
         for (uint8 i = 0; i < identityCommitments.length; ) {
             _addIdentity(credId, identityCommitments[i]);
@@ -114,28 +112,25 @@ contract Credential is ICredential, CredentialCore, CredentialCreds {
         creds[credId].merkleRootCreationDates[merkleTreeRoot] = block.timestamp;
     }
 
-    /// @dev See {ICredential-updateIdentity}.
     function updateIdentity(
         uint256 credId,
         uint256 identityCommitment,
         uint256 newIdentityCommitment,
         uint256[] calldata proofSiblings,
         uint8[] calldata proofPathIndices
-    ) internal onlyCredAdmin(credId) {
+    ) internal {
         _updateIdentity(credId, identityCommitment, newIdentityCommitment, proofSiblings, proofPathIndices);
     }
 
-    /// @dev See {ICredential-removeIdentity}.
     function removeIdentity(
         uint256 credId,
         uint256 identityCommitment,
         uint256[] calldata proofSiblings,
         uint8[] calldata proofPathIndices
-    ) internal onlyCredAdmin(credId) {
+    ) internal {
         _removeIdentity(credId, identityCommitment, proofSiblings, proofPathIndices);
     }
 
-    /// @dev See {ICredential-verifyProof}.
     function verifyProof(
         uint256 credId,
         uint256 merkleTreeRoot,
