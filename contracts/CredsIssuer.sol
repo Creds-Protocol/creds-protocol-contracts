@@ -5,9 +5,10 @@ import "./interfaces/ICredential.sol";
 import "./interfaces/IVerifier.sol";
 import "./base/CredentialCore.sol";
 import "./base/CredentialCreds.sol";
+import "./base/CredsProtocol.sol";
 
 /// @title CredsIssuer
-contract CredsIssuer is ICredential, CredentialCore, CredentialCreds {
+contract CredsIssuer is ICredential, CredentialCore, CredentialCreds, CredsProtocol {
     
     address public credsIssuer;
     string public issuerName;
@@ -55,6 +56,7 @@ contract CredsIssuer is ICredential, CredentialCore, CredentialCreds {
         credsIssuer = _issuer;
         issuerName =_issuerName;
         issuerSymbol =_issuerSymbol;
+        registerIssuer(_issuer, address(this));
         emit issuerRegistered(_issuer, _issuerName, _issuerSymbol);
     }
 

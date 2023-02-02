@@ -23,14 +23,6 @@ interface ICredential {
         address contractAddress;
         uint256 merkleTreeDepth;
     }
-    
-    struct Issuer {
-        address credsIssuer;
-        string issuerName;
-        string issuerSymbol;
-        uint256 credsIssuedCount;
-        mapping(uint256 => Cred) credsIssued;
-    }
 
     /// @dev Emitted when an admin is assigned to a cred.
     /// @param issuerAddress: Address of the issuer
