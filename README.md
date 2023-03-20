@@ -38,7 +38,7 @@ yarn add @creds-protocol/contracts
 
 ## 🎓 Deployed contracts
 
-### FVM Mainnet
+### Creds Verifier Contracts
 
 | Contract Name | Mainnet Address     | Hyperspace Addresss                  |
 | :-------- | :------- | :-------------------------------- |
