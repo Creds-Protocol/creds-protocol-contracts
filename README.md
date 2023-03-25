@@ -9,10 +9,10 @@
     <a href="https://github.com/Creds-Protocol">
         <img src="https://img.shields.io/badge/project-Creds Protocol-green.svg?style=flat-square">
     </a>
-    <a href="https://www.npmjs.com/package/@semaphore-protocol/contracts">
+    <a href="https://www.npmjs.com/package/@creds-protocol/contracts">
         <img alt="NPM version" src="https://img.shields.io/npm/v/@creds-protocol/contracts?style=flat-square" />
     </a>
-    <a href="https://npmjs.org/package/@semaphore-protocol/contracts">
+    <a href="https://npmjs.org/package/@creds-protocol/contracts">
         <img alt="Downloads" src="https://img.shields.io/npm/dm/@creds-protocol/contracts.svg?style=flat-square" />
     </a>
 </p>
